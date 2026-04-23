@@ -30,6 +30,12 @@ function Navbar() {
             </NavLink>
           </li>
           <li>
+            <NavLink to="/history" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+              <span className="nav-icon">📈</span>
+              <span>History</span>
+            </NavLink>
+          </li>
+          <li>
             <NavLink to="/about" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
               <span className="nav-icon">ℹ️</span>
               <span>About</span>

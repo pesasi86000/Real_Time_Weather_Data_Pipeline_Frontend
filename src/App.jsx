@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import Forecast from './pages/Forecast'
+import History from './pages/History'
 import About from './pages/About'
 import './App.css'
 
@@ -24,6 +25,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/forecast" element={<Forecast />} />
+            <Route path="/history" element={<History />} />
             <Route path="/about" element={<About />} />
           </Routes>
         </main>
