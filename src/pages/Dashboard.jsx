@@ -6,12 +6,28 @@ function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [lastUpdated, setLastUpdated] = useState(null)
+  const [selectedCity, setSelectedCity] = useState('London')
 
-  const fetchWeatherData = async () => {
+  // List of available cities
+  const cities = [
+    'London',
+    'New York',
+    'Tokyo',
+    'Sydney',
+    'Paris',
+    'Dubai',
+    'Mumbai',
+    'Singapore',
+    'Toronto',
+    'Berlin'
+  ]
+
+  const fetchWeatherData = async (city = selectedCity) => {
     try {
       setLoading(true)
       setError(null)
-      const response = await fetch('http://127.0.0.1:5000/weather')
+      const encodedCity = encodeURIComponent(city)
+      const response = await fetch(`http://127.0.0.1:5000/weather?city=${encodedCity}`)
       
       if (!response.ok) {
         throw new Error('Failed to fetch weather data')
@@ -27,11 +43,18 @@ function Dashboard() {
     }
   }
 
+  // Handle city selection change
+  const handleCityChange = (e) => {
+    const newCity = e.target.value
+    setSelectedCity(newCity)
+    fetchWeatherData(newCity)
+  }
+
   useEffect(() => {
-    fetchWeatherData()
-    const interval = setInterval(fetchWeatherData, 300000)
+    fetchWeatherData(selectedCity)
+    const interval = setInterval(() => fetchWeatherData(selectedCity), 300000)
     return () => clearInterval(interval)
-  }, [])
+  }, [selectedCity])
 
   const getWeatherIcon = (condition) => {
     if (!condition) return '☁️'
@@ -48,8 +71,26 @@ function Dashboard() {
   return (
     <div className="dashboard-page">
       <div className="dashboard-header">
-        <h1 className="dashboard-title">Weather Dashboard</h1>
-        <p className="dashboard-subtitle">Real-time weather monitoring and analytics</p>
+        <div className="header-content">
+          <h1 className="dashboard-title">Weather Dashboard</h1>
+          <p className="dashboard-subtitle">Real-time weather monitoring and analytics</p>
+        </div>
+        
+        <div className="city-selector-container">
+          <label htmlFor="city-dropdown" className="city-label">Select City:</label>
+          <select 
+            id="city-dropdown"
+            className="city-dropdown" 
+            value={selectedCity} 
+            onChange={handleCityChange}
+          >
+            {cities.map(city => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="dashboard-content">
