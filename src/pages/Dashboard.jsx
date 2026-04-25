@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react'
-import { getErrorMessage, parseErrorResponse } from '../utils/errorHandler'
-import Alert from '../components/Alert'
 import './Dashboard.css'
 
 function Dashboard() {
   const [weatherData, setWeatherData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [errorType, setErrorType] = useState(null)
   const [lastUpdated, setLastUpdated] = useState(null)
   const [selectedCity, setSelectedCity] = useState('London')
 
@@ -29,48 +26,20 @@ function Dashboard() {
     try {
       setLoading(true)
       setError(null)
-      setErrorType(null)
-      
       const encodedCity = encodeURIComponent(city)
-      const response = await fetch(`http://127.0.0.1:5000/weather?city=${encodedCity}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-      })
+      const response = await fetch(`http://127.0.0.1:5000/weather?city=${encodedCity}`)
       
       if (!response.ok) {
-        // Parse backend response for error details
-        const errorData = await parseErrorResponse(response)
-        const friendlyMessage = getErrorMessage(errorData.message || response.status)
-        
-        setError(friendlyMessage)
-        setErrorType(response.status === 404 ? 'NOT_FOUND' : 'API_ERROR')
-        setLoading(false)
-        return
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || `City not found or backend error (${response.status})`)
       }
       
       const data = await response.json()
       setWeatherData(data)
       setLastUpdated(new Date())
-      setError(null)
-      setErrorType(null)
       setLoading(false)
     } catch (err) {
-      // Handle network errors, timeouts, and other errors
-      let friendlyMessage = getErrorMessage(err)
-      let errorTypeValue = 'NETWORK_ERROR'
-      
-      if (err.message.includes('not found')) {
-        errorTypeValue = 'NOT_FOUND'
-      } else if (err.message.includes('network')) {
-        errorTypeValue = 'NETWORK_ERROR'
-      } else if (err.message.includes('timeout')) {
-        errorTypeValue = 'TIMEOUT'
-      }
-      
-      setError(friendlyMessage)
-      setErrorType(errorTypeValue)
+      setError(err.message || 'Unable to connect to backend. Please make sure the server is running at http://127.0.0.1:5000')
       setLoading(false)
     }
   }
@@ -134,29 +103,14 @@ function Dashboard() {
         )}
 
         {error && (
-          <Alert
-            type={errorType === 'NOT_FOUND' ? 'notfound' : 'error'}
-            title={errorType === 'NOT_FOUND' ? 'City Not Found' : 'Unable to Fetch Weather Data'}
-            message={error}
-            icon={errorType === 'NOT_FOUND' ? '🔍' : '⚠️'}
-            onClose={() => setError(null)}
-            actions={
-              <div style={{ display: 'flex', gap: '12px', width: '100%', justifyContent: 'center' }}>
-                <button 
-                  className="retry-button" 
-                  onClick={() => fetchWeatherData(selectedCity)}
-                  style={{ marginBottom: 0 }}
-                >
-                  Try Again
-                </button>
-                {errorType === 'NOT_FOUND' && (
-                  <p style={{ fontSize: '0.9rem', color: '#718096', marginBottom: 0, marginTop: '6px' }}>
-                    💡 Select a different city from the dropdown above
-                  </p>
-                )}
-              </div>
-            }
-          />
+          <div className="error-container">
+            <div className="error-icon">⚠️</div>
+            <h2 className="error-title">Connection Error</h2>
+            <p className="error-message">{error}</p>
+            <button className="retry-button" onClick={() => fetchWeatherData(selectedCity)}>
+              Try Again
+            </button>
+          </div>
         )}
 
         {!loading && !error && weatherData && (
