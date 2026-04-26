@@ -182,10 +182,73 @@
   filter: drop-shadow(0 10px 30px rgba(255, 255, 255, 0.3));
 }
 
+/* Quick Section Cards (Current Weather / Historical Data / Forecast) */
+.quick-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px 60px;
+}
+
+.quick-section-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.quick-section-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
+  border-color: #667eea;
+}
+
+.qs-icon {
+  font-size: 2.4rem;
+  flex-shrink: 0;
+}
+
+.qs-body {
+  flex: 1;
+}
+
+.qs-body h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 0 0 4px;
+}
+
+.qs-body p {
+  font-size: 0.9rem;
+  color: #718096;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.qs-arrow {
+  font-size: 1.2rem;
+  color: #667eea;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.quick-section-card:hover .qs-arrow {
+  transform: translateX(4px);
+}
+
 /* Features Section */
 .features-section {
   background: rgba(255, 255, 255, 0.95);
-  padding: 100px 40px;
   backdrop-filter: blur(10px);
 }
 

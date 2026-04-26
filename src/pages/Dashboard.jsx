@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import SectionHeader from '../components/SectionHeader'
 import './Dashboard.css'
 
 function Dashboard() {
@@ -71,24 +72,22 @@ function Dashboard() {
 
   return (
     <div className="dashboard-page">
+      {/* ── Page Header ── */}
       <div className="dashboard-header">
         <div className="header-content">
           <h1 className="dashboard-title">Weather Dashboard</h1>
           <p className="dashboard-subtitle">Real-time weather monitoring and analytics</p>
         </div>
-        
         <div className="city-selector-container">
           <label htmlFor="city-dropdown" className="city-label">Select City:</label>
-          <select 
+          <select
             id="city-dropdown"
-            className="city-dropdown" 
-            value={selectedCity} 
+            className="city-dropdown"
+            value={selectedCity}
             onChange={handleCityChange}
           >
             {cities.map(city => (
-              <option key={city} value={city}>
-                {city}
-              </option>
+              <option key={city} value={city}>{city}</option>
             ))}
           </select>
         </div>
@@ -115,90 +114,104 @@ function Dashboard() {
 
         {!loading && !error && weatherData && (
           <>
-            <div className="weather-grid">
-              <div className="weather-card main-card">
-                <div className="card-header">
+            {/* ── Section: Current Weather ── */}
+            <section className="page-section">
+              <SectionHeader
+                icon="🌡️"
+                title="Current Weather"
+                subtitle={`Live conditions for ${weatherData.title || weatherData.location || weatherData.city || selectedCity}`}
+                action={
+                  <button
+                    className="refresh-button"
+                    onClick={() => fetchWeatherData(selectedCity)}
+                    title="Refresh data"
+                  >
+                    ↻ Refresh
+                  </button>
+                }
+              />
+
+              <div className="weather-grid">
+                {/* Main temperature card */}
+                <div className="weather-card main-card">
                   <div className="location-info">
                     <h2 className="location-name">
                       {weatherData.title || weatherData.location || weatherData.city || 'Weather Update'}
                     </h2>
                     {lastUpdated && (
-                      <p className="last-updated">
-                        Updated: {lastUpdated.toLocaleTimeString()}
-                      </p>
+                      <p className="last-updated">Updated: {lastUpdated.toLocaleTimeString()}</p>
                     )}
                   </div>
-                  <button 
-                    className="refresh-button" 
-                    onClick={fetchWeatherData}
-                    title="Refresh"
-                  >
-                    ↻
-                  </button>
-                </div>
 
-                <div className="weather-main">
-                  <div className="weather-icon-large">
-                    {getWeatherIcon(weatherData.condition || weatherData.weather)}
+                  <div className="weather-main">
+                    <div className="weather-icon-large">
+                      {getWeatherIcon(weatherData.condition || weatherData.weather)}
+                    </div>
+                    <div className="temperature-display">
+                      <span className="temperature">
+                        {weatherData.temperature || weatherData.temp || 'N/A'}
+                      </span>
+                      <span className="temperature-unit">°C</span>
+                    </div>
                   </div>
-                  <div className="temperature-display">
-                    <span className="temperature">
-                      {weatherData.temperature || weatherData.temp || 'N/A'}
-                    </span>
-                    <span className="temperature-unit">°C</span>
+
+                  <div className="condition-display">
+                    {weatherData.condition || weatherData.weather || 'Unknown'}
                   </div>
                 </div>
 
-                <div className="condition-display">
-                  {weatherData.condition || weatherData.weather || 'Unknown'}
-                </div>
-              </div>
-
-              <div className="weather-card detail-card-grid">
-                <div className="mini-stat">
-                  <div className="mini-stat-icon">💧</div>
-                  <div className="mini-stat-content">
-                    <p className="mini-stat-label">Humidity</p>
-                    <p className="mini-stat-value">
-                      {weatherData.humidity || weatherData.humidity_percent || 'N/A'}%
-                    </p>
+                {/* Detail stats card */}
+                <div className="weather-card detail-card-grid">
+                  <div className="mini-stat">
+                    <div className="mini-stat-icon">💧</div>
+                    <div className="mini-stat-content">
+                      <p className="mini-stat-label">Humidity</p>
+                      <p className="mini-stat-value">
+                        {weatherData.humidity || weatherData.humidity_percent || 'N/A'}%
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="mini-stat">
-                  <div className="mini-stat-icon">🌡️</div>
-                  <div className="mini-stat-content">
-                    <p className="mini-stat-label">Feels Like</p>
-                    <p className="mini-stat-value">
-                      {weatherData.feels_like || weatherData.temperature || 'N/A'}°C
-                    </p>
+                  <div className="mini-stat">
+                    <div className="mini-stat-icon">🌡️</div>
+                    <div className="mini-stat-content">
+                      <p className="mini-stat-label">Feels Like</p>
+                      <p className="mini-stat-value">
+                        {weatherData.feels_like || weatherData.temperature || 'N/A'}°C
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="mini-stat">
-                  <div className="mini-stat-icon">🌬️</div>
-                  <div className="mini-stat-content">
-                    <p className="mini-stat-label">Wind Speed</p>
-                    <p className="mini-stat-value">
-                      {weatherData.wind_speed || '0'} km/h
-                    </p>
+                  <div className="mini-stat">
+                    <div className="mini-stat-icon">🌬️</div>
+                    <div className="mini-stat-content">
+                      <p className="mini-stat-label">Wind Speed</p>
+                      <p className="mini-stat-value">
+                        {weatherData.wind_speed || '0'} km/h
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                <div className="mini-stat">
-                  <div className="mini-stat-icon">👁️</div>
-                  <div className="mini-stat-content">
-                    <p className="mini-stat-label">Visibility</p>
-                    <p className="mini-stat-value">
-                      {weatherData.visibility || '10'} km
-                    </p>
+                  <div className="mini-stat">
+                    <div className="mini-stat-icon">👁️</div>
+                    <div className="mini-stat-content">
+                      <p className="mini-stat-label">Visibility</p>
+                      <p className="mini-stat-value">
+                        {weatherData.visibility || '10'} km
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div className="analytics-section">
-              <h3 className="analytics-title">Weather Analytics</h3>
+            {/* ── Section: Weather Analytics ── */}
+            <section className="page-section">
+              <SectionHeader
+                icon="📊"
+                title="Weather Analytics"
+                subtitle="Derived insights from current conditions"
+              />
               <div className="analytics-grid">
                 <div className="analytics-card">
                   <div className="analytics-icon">📈</div>
@@ -216,7 +229,7 @@ function Dashboard() {
                   <p>Moderate (5/10)</p>
                 </div>
               </div>
-            </div>
+            </section>
           </>
         )}
       </div>

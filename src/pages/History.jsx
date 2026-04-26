@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts'
+import SectionHeader from '../components/SectionHeader'
 import './History.css'
 
 function History() {
@@ -115,6 +116,7 @@ function History() {
 
   return (
     <div className="history-page">
+      {/* ── Page Header ── */}
       <div className="history-header">
         <h1 className="history-title">Historical Weather Records</h1>
         <p className="history-subtitle">View and analyze past weather data</p>
@@ -141,16 +143,18 @@ function History() {
 
         {!loading && !error && historicalData.length > 0 && (
           <>
-            {/* ── Historical Data Table ── */}
-            <div className="table-container">
-              <div className="table-info">
-                <p className="record-count">
-                  Total Records: <strong>{historicalData.length}</strong>
-                </p>
-                <button className="refresh-button" onClick={loadCSVData} title="Refresh data">
-                  ↻ Refresh
-                </button>
-              </div>
+            {/* ── Section: Historical Data Table ── */}
+            <section className="page-section">
+              <SectionHeader
+                icon="📋"
+                title="Historical Data"
+                subtitle={`${historicalData.length} records loaded from weather history`}
+                action={
+                  <button className="refresh-btn" onClick={loadCSVData} title="Refresh data">
+                    ↻ Refresh
+                  </button>
+                }
+              />
 
               <div className="table-wrapper">
                 <table className="history-table">
@@ -189,51 +193,58 @@ function History() {
                   </tbody>
                 </table>
               </div>
-            </div>
+            </section>
 
-            {/* ── Temperature Line Chart ── */}
-            <div className="chart-container">
-              <h2 className="chart-title">🌡️ Temperature Over Time (°C)</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={historicalData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="Time" tick={{ fontSize: 12 }} />
-                  <YAxis unit="°C" tick={{ fontSize: 12 }} />
-                  <Tooltip formatter={(value) => [`${value} °C`, 'Temperature']} />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="Temperature (°C)"
-                    stroke="#e74c3c"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            {/* ── Section: Data Visualization ── */}
+            <section className="page-section">
+              <SectionHeader
+                icon="📈"
+                title="Data Visualization"
+                subtitle="Temperature and humidity trends over time"
+              />
 
-            {/* ── Humidity Line Chart ── */}
-            <div className="chart-container">
-              <h2 className="chart-title">💧 Humidity Over Time (%)</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={historicalData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="Time" tick={{ fontSize: 12 }} />
-                  <YAxis unit="%" tick={{ fontSize: 12 }} />
-                  <Tooltip formatter={(value) => [`${value} %`, 'Humidity']} />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="Humidity (%)"
-                    stroke="#3498db"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+              <div className="chart-container">
+                <h3 className="chart-title">🌡️ Temperature Over Time (°C)</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={historicalData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="Time" tick={{ fontSize: 12 }} />
+                    <YAxis unit="°C" tick={{ fontSize: 12 }} />
+                    <Tooltip formatter={(value) => [`${value} °C`, 'Temperature']} />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="Temperature (°C)"
+                      stroke="#e74c3c"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                      activeDot={{ r: 6 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="chart-container chart-container--spaced">
+                <h3 className="chart-title">💧 Humidity Over Time (%)</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={historicalData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="Time" tick={{ fontSize: 12 }} />
+                    <YAxis unit="%" tick={{ fontSize: 12 }} />
+                    <Tooltip formatter={(value) => [`${value} %`, 'Humidity']} />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="Humidity (%)"
+                      stroke="#3498db"
+                      strokeWidth={2}
+                      dot={{ r: 4 }}
+                      activeDot={{ r: 6 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </section>
           </>
         )}
 

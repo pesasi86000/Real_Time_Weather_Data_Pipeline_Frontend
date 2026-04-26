@@ -4,6 +4,7 @@ import './Home.css'
 function Home() {
   return (
     <div className="home-page">
+      {/* ── Hero ── */}
       <div className="hero-section">
         <div className="hero-content">
           <h1 className="hero-title">
@@ -11,12 +12,11 @@ function Home() {
             Real-Time Weather Intelligence
           </h1>
           <p className="hero-subtitle">
-            Experience weather data like never before with our cutting-edge real-time pipeline
+            Monitor live conditions, explore forecasts, and analyze historical data — all in one place.
           </p>
           <div className="hero-buttons">
             <Link to="/dashboard" className="btn btn-primary">
-              View Dashboard
-              <span className="btn-arrow">→</span>
+              View Dashboard <span className="btn-arrow">→</span>
             </Link>
             <Link to="/forecast" className="btn btn-secondary">
               7-Day Forecast
@@ -34,6 +34,37 @@ function Home() {
         </div>
       </div>
 
+      {/* ── Quick Navigation Sections ── */}
+      <div className="quick-sections">
+        <Link to="/dashboard" className="quick-section-card">
+          <div className="qs-icon">🌡️</div>
+          <div className="qs-body">
+            <h3>Current Weather</h3>
+            <p>Live temperature, humidity, wind and visibility for any city</p>
+          </div>
+          <span className="qs-arrow">→</span>
+        </Link>
+
+        <Link to="/history" className="quick-section-card">
+          <div className="qs-icon">📋</div>
+          <div className="qs-body">
+            <h3>Historical Data</h3>
+            <p>Browse and visualize past weather records from the data pipeline</p>
+          </div>
+          <span className="qs-arrow">→</span>
+        </Link>
+
+        <Link to="/forecast" className="quick-section-card">
+          <div className="qs-icon">📅</div>
+          <div className="qs-body">
+            <h3>7-Day Forecast</h3>
+            <p>Plan ahead with accurate weekly weather predictions</p>
+          </div>
+          <span className="qs-arrow">→</span>
+        </Link>
+      </div>
+
+      {/* ── Features ── */}
       <div className="features-section">
         <h2 className="section-title">Why Choose WeatherPro?</h2>
         <div className="features-grid">
@@ -41,52 +72,48 @@ function Home() {
             <div className="feature-icon">⚡</div>
             <h3 className="feature-title">Real-Time Updates</h3>
             <p className="feature-description">
-              Get instant weather updates powered by our advanced data pipeline
+              Instant weather updates powered by our advanced data pipeline
             </p>
           </div>
-
           <div className="feature-card">
             <div className="feature-icon">🎯</div>
             <h3 className="feature-title">Accurate Data</h3>
             <p className="feature-description">
-              Precision weather forecasting with 99% accuracy guaranteed
+              Precision forecasting with 99% accuracy guaranteed
             </p>
           </div>
-
           <div className="feature-card">
             <div className="feature-icon">📱</div>
             <h3 className="feature-title">Responsive Design</h3>
             <p className="feature-description">
-              Beautiful interface that works seamlessly on all your devices
+              Beautiful interface that works seamlessly on all devices
             </p>
           </div>
-
           <div className="feature-card">
             <div className="feature-icon">🌍</div>
             <h3 className="feature-title">Global Coverage</h3>
             <p className="feature-description">
-              Access weather data from thousands of locations worldwide
+              Weather data from thousands of locations worldwide
             </p>
           </div>
-
           <div className="feature-card">
             <div className="feature-icon">📊</div>
             <h3 className="feature-title">Detailed Analytics</h3>
             <p className="feature-description">
-              Comprehensive weather metrics and historical data analysis
+              Comprehensive metrics and historical data analysis
             </p>
           </div>
-
           <div className="feature-card">
             <div className="feature-icon">🔔</div>
             <h3 className="feature-title">Smart Alerts</h3>
             <p className="feature-description">
-              Receive notifications for severe weather conditions
+              Notifications for severe weather conditions
             </p>
           </div>
         </div>
       </div>
 
+      {/* ── Stats ── */}
       <div className="stats-section">
         <div className="stats-grid">
           <div className="stat-card">
@@ -108,12 +135,12 @@ function Home() {
         </div>
       </div>
 
+      {/* ── CTA ── */}
       <div className="cta-section">
         <h2 className="cta-title">Ready to Experience Premium Weather Data?</h2>
         <p className="cta-subtitle">Join thousands of users who trust WeatherPro</p>
         <Link to="/dashboard" className="btn btn-large">
-          Get Started Now
-          <span className="btn-arrow">→</span>
+          Get Started Now <span className="btn-arrow">→</span>
         </Link>
       </div>
     </div>

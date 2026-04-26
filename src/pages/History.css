@@ -10,20 +10,48 @@
 
 .history-title {
   font-size: 2.5rem;
-  color: #1a1a2e;
+  color: white;
   margin: 0 0 10px 0;
   font-weight: 700;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.15);
 }
 
 .history-subtitle {
   font-size: 1.1rem;
-  color: #666;
+  color: rgba(255, 255, 255, 0.85);
   margin: 0;
 }
 
 .history-content {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* Page Sections */
+.page-section {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+
+/* Refresh button (pill style) */
+.refresh-btn {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.refresh-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
 }
 
 /* Loading State */
@@ -52,7 +80,7 @@
 
 .loading-text {
   font-size: 1.1rem;
-  color: #666;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* Error State */
@@ -98,10 +126,6 @@
   box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
 }
 
-.retry-button:active {
-  transform: translateY(0);
-}
-
 /* Empty State */
 .empty-container {
   background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
@@ -127,55 +151,6 @@
   color: #666;
   font-size: 1rem;
   margin: 10px 0;
-}
-
-/* Table Container */
-.table-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  margin: 20px 0;
-}
-
-.table-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #f0f0f0;
-}
-
-.record-count {
-  color: #333;
-  font-size: 1rem;
-  margin: 0;
-}
-
-.record-count strong {
-  color: #3498db;
-  font-weight: 700;
-}
-
-.refresh-button {
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.refresh-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.4);
-}
-
-.refresh-button:active {
-  transform: translateY(0);
 }
 
 /* Table Wrapper & Scroll */
@@ -237,7 +212,7 @@
 }
 
 .table-row:hover {
-  background-color: #f8f9fa;
+  background-color: #f0f7ff;
 }
 
 .table-row:nth-child(even) {
@@ -245,7 +220,7 @@
 }
 
 .table-row:nth-child(even):hover {
-  background-color: #f0f0f0;
+  background-color: #eaf4ff;
 }
 
 .table-cell {
@@ -253,6 +228,24 @@
   color: #333;
   word-break: break-word;
   max-width: 300px;
+}
+
+/* Charts */
+.chart-container {
+  margin-bottom: 8px;
+}
+
+.chart-container--spaced {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.chart-title {
+  font-size: 1.1rem;
+  color: #2d3748;
+  margin: 0 0 16px 0;
+  font-weight: 600;
 }
 
 /* Responsive */
@@ -265,14 +258,8 @@
     font-size: 2rem;
   }
 
-  .table-container {
-    padding: 20px 10px;
-  }
-
-  .table-info {
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
+  .page-section {
+    padding: 20px 16px;
   }
 
   .history-table {
@@ -289,25 +276,12 @@
 }
 
 @media (max-width: 480px) {
-  .history-page {
-    padding: 20px 5px;
-  }
-
   .history-title {
     font-size: 1.5rem;
   }
 
-  .history-subtitle {
-    font-size: 0.95rem;
-  }
-
-  .history-header {
-    margin-bottom: 30px;
-  }
-
-  .table-container {
-    padding: 15px 10px;
-    margin: 15px 0;
+  .page-section {
+    padding: 16px 12px;
   }
 
   .history-table {
@@ -321,34 +295,16 @@
   .sortable-header {
     padding: 10px 4px;
   }
-
-  .header-content {
-    gap: 4px;
-  }
 }
 
-/* ── Chart Sections ── */
-.chart-container {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  margin: 20px 0;
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 20px;
 }
 
-.chart-title {
-  font-size: 1.3rem;
-  color: #1a1a2e;
-  margin: 0 0 20px 0;
-  font-weight: 600;
-}
-
-@media (max-width: 768px) {
-  .chart-container {
-    padding: 20px 10px;
-  }
-
-  .chart-title {
-    font-size: 1.1rem;
-  }
-}
+/* end of History.css */

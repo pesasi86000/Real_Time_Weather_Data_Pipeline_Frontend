@@ -6,30 +6,30 @@
 }
 
 .dashboard-header {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
   margin-bottom: 40px;
   animation: fadeInDown 0.6s ease-out;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
+  flex-wrap: wrap;
 }
 
 .header-content {
-  width: 100%;
+  flex: 1;
 }
 
 .dashboard-title {
-  font-size: 3rem;
+  font-size: 2.4rem;
   font-weight: 800;
   color: white;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
 }
 
 .dashboard-subtitle {
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* City Selector Styles */
@@ -136,17 +136,17 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  font-size: 1.5rem;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .refresh-button:hover {
-  transform: rotate(180deg) scale(1.1);
+  transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
@@ -197,6 +197,17 @@
   border-top: 2px solid rgba(102, 126, 234, 0.1);
 }
 
+/* Page Sections */
+.page-section {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: 32px;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  animation: fadeInUp 0.6s ease-out;
+}
+
 /* Detail Card Grid */
 .detail-card-grid {
   display: flex;
@@ -241,31 +252,12 @@
   color: #2d3748;
 }
 
-/* Analytics Section */
-.analytics-section {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 24px;
-  padding: 32px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.analytics-title {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.analytics-title::before {
-  content: '📊';
-  font-size: 2rem;
-}
-
+/* Analytics Grid */
 .analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 24px;
