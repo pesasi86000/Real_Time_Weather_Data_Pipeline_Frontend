@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import SectionHeader from '../components/SectionHeader'
+import AlertBox from '../components/AlertBox'
+import { checkWeatherAlerts } from '../utils/weatherAlerts'
 import './Dashboard.css'
 
 function Dashboard() {
@@ -8,6 +10,8 @@ function Dashboard() {
   const [error, setError] = useState(null)
   const [lastUpdated, setLastUpdated] = useState(null)
   const [selectedCity, setSelectedCity] = useState('London')
+  const [alerts, setAlerts] = useState([])
+  const [dismissedAlerts, setDismissedAlerts] = useState(new Set())
 
   // List of available cities
   const cities = [
@@ -38,6 +42,12 @@ function Dashboard() {
       const data = await response.json()
       setWeatherData(data)
       setLastUpdated(new Date())
+      
+      // Generate weather alerts
+      const newAlerts = checkWeatherAlerts(data)
+      setAlerts(newAlerts)
+      setDismissedAlerts(new Set()) // Reset dismissed alerts when new data arrives
+      
       setLoading(false)
     } catch (err) {
       setError(err.message || 'Unable to connect to backend. Please make sure the server is running at http://127.0.0.1:5000')
@@ -70,6 +80,14 @@ function Dashboard() {
     return '🌤️'
   }
 
+  const handleDismissAlert = (index) => {
+    const newDismissed = new Set(dismissedAlerts)
+    newDismissed.add(index)
+    setDismissedAlerts(newDismissed)
+  }
+
+  const visibleAlerts = alerts.filter((_, index) => !dismissedAlerts.has(index))
+
   return (
     <div className="dashboard-page">
       {/* ── Page Header ── */}
@@ -94,6 +112,20 @@ function Dashboard() {
       </div>
 
       <div className="dashboard-content">
+        {/* ── Weather Alerts Section ── */}
+        {visibleAlerts.length > 0 && (
+          <div className="alerts-container">
+            {visibleAlerts.map((alert, index) => (
+              <AlertBox
+                key={index}
+                type={alert.type}
+                message={alert.message}
+                onClose={() => handleDismissAlert(index)}
+              />
+            ))}
+          </div>
+        )}
+
         {loading && !weatherData && (
           <div className="loading-container">
             <div className="spinner"></div>

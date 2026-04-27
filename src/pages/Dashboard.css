@@ -86,6 +86,12 @@
   animation: fadeInUp 0.6s ease-out;
 }
 
+/* Alerts Container */
+.alerts-container {
+  margin-bottom: 32px;
+  animation: slideIn 0.3s ease-in-out;
+}
+
 /* Weather Grid */
 .weather-grid {
   display: grid;
