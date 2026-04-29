@@ -45,12 +45,86 @@
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   border: 2px solid transparent;
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  font-family: inherit;
+  /* reset button styles */
+  outline: none;
 }
 
-.forecast-card:hover {
+.forecast-card:hover,
+.forecast-card:focus-visible {
   transform: translateY(-8px);
   box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
   border-color: #667eea;
+}
+
+.forecast-card-active {
+  border-color: #667eea;
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.25);
+  transform: translateY(-4px);
+}
+
+/* ─── Severity dot ────────────────────────────────────────── */
+.severity-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+.dot-critical { background: #dc3545; animation: dotPulse 1.8s ease-in-out infinite; }
+.dot-high     { background: #fd7e14; }
+.dot-medium   { background: #ffc107; }
+.dot-low      { background: #28a745; }
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.7; }
+}
+
+/* ─── Alert hint row on card ──────────────────────────────── */
+.forecast-alert-hint {
+  margin-top: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.08);
+  border-radius: 20px;
+  padding: 3px 10px;
+  display: inline-block;
+}
+
+/* ─── Per-day expanded alerts ─────────────────────────────── */
+.forecast-day-alerts {
+  margin-top: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.3s ease-out;
+  border: 1.5px solid rgba(102, 126, 234, 0.15);
+}
+
+/* ─── Forecast alert summary header ──────────────────────── */
+.forecast-alert-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 18px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+  backdrop-filter: blur(6px);
 }
 
 .forecast-day {

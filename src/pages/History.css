@@ -248,6 +248,280 @@
   font-weight: 600;
 }
 
+/* ─── Error hint ──────────────────────────────────────────── */
+.error-hint {
+  color: #888;
+  font-size: 0.88rem;
+  margin: 0 0 20px 0;
+}
+
+.error-hint code {
+  background: rgba(0,0,0,0.07);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* ─── Live section ────────────────────────────────────────── */
+.live-section {
+  border-top: 3px solid #e74c3c;
+}
+
+.live-error-bar {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  color: #7d5a00;
+  margin-bottom: 16px;
+}
+
+/* Skeleton loading */
+.live-skeleton-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.live-skeleton {
+  height: 180px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #e8eaf0 25%, #f5f6f8 50%, #e8eaf0 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+/* Live city cards grid */
+.live-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 16px;
+}
+
+.live-card {
+  background: linear-gradient(145deg, #f8faff, #eef2ff);
+  border: 1.5px solid rgba(102, 126, 234, 0.18);
+  border-radius: 16px;
+  padding: 16px 14px;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.live-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.18);
+}
+
+.live-card-alert {
+  border-color: rgba(220, 53, 69, 0.35);
+  background: linear-gradient(145deg, #fff8f8, #ffe8ea);
+}
+
+.live-alert-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #dc3545;
+  border: 2px solid white;
+  animation: dotPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.5); opacity: 0.6; }
+}
+
+.live-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.live-city {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #4a5568;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.live-icon {
+  font-size: 1.6rem;
+}
+
+.live-temp {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+
+.live-condition {
+  font-size: 0.82rem;
+  color: #718096;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.live-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: #718096;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.12);
+}
+
+/* Comparison strip */
+.live-vs-collected {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lvc-label {
+  font-size: 0.72rem;
+  color: #a0aec0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.lvc-collected {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lvc-time {
+  font-size: 0.72rem;
+  color: #a0aec0;
+}
+
+.lvc-empty .lvc-label {
+  color: #cbd5e0;
+  font-style: italic;
+}
+
+/* ─── Delta arrows ────────────────────────────────────────── */
+.delta {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.delta-up {
+  color: #e53e3e;
+  background: rgba(229, 62, 62, 0.1);
+}
+
+.delta-down {
+  color: #2b6cb0;
+  background: rgba(43, 108, 176, 0.1);
+}
+
+.delta-neutral {
+  color: #a0aec0;
+  font-size: 0.75rem;
+}
+
+/* ─── Latest per-city grid ────────────────────────────────── */
+.latest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.latest-card {
+  background: #f8faff;
+  border: 1.5px solid rgba(102, 126, 234, 0.14);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.latest-city {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.12);
+}
+
+.latest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 0.85rem;
+}
+
+.latest-label {
+  color: #718096;
+  font-weight: 500;
+}
+
+.latest-val {
+  color: #2d3748;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ─── Table: highlight most-recent row ───────────────────── */
+.table-row-latest {
+  background: rgba(102, 126, 234, 0.06) !important;
+  border-left: 3px solid #667eea;
+}
+
+.table-row-latest:hover {
+  background: rgba(102, 126, 234, 0.11) !important;
+}
+
+.latest-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #667eea;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* ─── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .live-grid,
+  .latest-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .live-temp {
+    font-size: 1.6rem;
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .history-page {

@@ -277,18 +277,238 @@
 .no-alerts {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   padding: 18px 20px;
   background: rgba(72, 187, 120, 0.08);
   border: 1.5px solid rgba(72, 187, 120, 0.3);
   border-radius: 12px;
   color: #276749;
-  font-size: 0.95rem;
-  font-weight: 500;
 }
 
-.no-alerts span {
+.no-alerts-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.no-alerts-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 2px;
+}
+
+.no-alerts-sub {
+  font-size: 0.88rem;
+  opacity: 0.85;
+  margin: 0;
+}
+
+/* ─── Alert Summary Banner ────────────────────────────────── */
+.alert-summary-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 0.93rem;
+  font-weight: 500;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.banner-critical {
+  background: rgba(220, 53, 69, 0.12);
+  border: 1.5px solid rgba(220, 53, 69, 0.35);
+  color: #721c24;
+}
+
+.banner-high {
+  background: rgba(255, 193, 7, 0.12);
+  border: 1.5px solid rgba(255, 193, 7, 0.4);
+  color: #7d5a00;
+}
+
+.banner-medium {
+  background: rgba(23, 162, 184, 0.1);
+  border: 1.5px solid rgba(23, 162, 184, 0.3);
+  color: #0c5460;
+}
+
+.banner-low {
+  background: rgba(72, 187, 120, 0.1);
+  border: 1.5px solid rgba(72, 187, 120, 0.3);
+  color: #276749;
+}
+
+.banner-icon {
   font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.banner-text strong {
+  font-weight: 700;
+}
+
+/* ─── Alert badge color variants ─────────────────────────── */
+.alert-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+
+.badge-critical {
+  color: #721c24;
+  background: rgba(220, 53, 69, 0.12);
+  border-color: rgba(220, 53, 69, 0.3);
+}
+
+.badge-high {
+  color: #7d5a00;
+  background: rgba(255, 160, 0, 0.12);
+  border-color: rgba(255, 160, 0, 0.3);
+}
+
+.badge-medium {
+  color: #0c5460;
+  background: rgba(23, 162, 184, 0.1);
+  border-color: rgba(23, 162, 184, 0.25);
+}
+
+.badge-low {
+  color: #276749;
+  background: rgba(72, 187, 120, 0.1);
+  border-color: rgba(72, 187, 120, 0.25);
+}
+
+/* ─── Header right cluster ────────────────────────────────── */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ─── Countdown bar ───────────────────────────────────────── */
+.countdown-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.countdown-track {
+  width: 120px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.countdown-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 4px;
+  transition: width 1s linear;
+}
+
+.countdown-label {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.75);
+  white-space: nowrap;
+}
+
+/* ─── Skeleton Loading ────────────────────────────────────── */
+.skeleton-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.skeleton-card {
+  pointer-events: none;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+.sk-row {
+  border-radius: 8px;
+  background: linear-gradient(90deg, #e8eaf0 25%, #f5f6f8 50%, #e8eaf0 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.sk-title {
+  height: 22px;
+  width: 220px;
+  margin-bottom: 20px;
+}
+
+.sk-wide {
+  height: 80px;
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+
+.sk-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.sk-detail {
+  height: 52px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #e8eaf0 25%, #f5f6f8 50%, #e8eaf0 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+/* ─── Refreshing overlay ──────────────────────────────────── */
+.is-refreshing {
+  opacity: 0.75;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+
+/* ─── Spinning refresh button ─────────────────────────────── */
+.btn-spinning .btn-refresh,
+.btn-spinning {
+  animation: spin 0.8s linear infinite;
+}
+
+/* ─── Temperature colour accents ─────────────────────────── */
+.temp-extreme-hot .temp-value {
+  background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.temp-hot .temp-value {
+  background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.temp-cold .temp-value {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.temp-freezing .temp-value {
+  background: linear-gradient(135deg, #a8edea 0%, #54a0ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* ─── State Boxes (Loading / Error) ──────────────────────── */
