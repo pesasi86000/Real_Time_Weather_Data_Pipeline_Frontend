@@ -510,6 +510,77 @@
   flex-shrink: 0;
 }
 
+/* ─── Charts: City Filter ─────────────────────────────────── */
+.charts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.city-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2d3748;
+  white-space: nowrap;
+}
+
+.city-selector {
+  padding: 8px 12px;
+  border: 1.5px solid rgba(102, 126, 234, 0.3);
+  border-radius: 8px;
+  background: white;
+  color: #2d3748;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-width: 140px;
+}
+
+.city-selector:hover {
+  border-color: rgba(102, 126, 234, 0.6);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.city-selector:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* ─── Chart Empty State ───────────────────────────────────── */
+.chart-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  background: linear-gradient(135deg, #f5f7ff 0%, #eef2ff 100%);
+  border: 2px dashed rgba(102, 126, 234, 0.2);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.chart-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.chart-empty-text {
+  color: #718096;
+  font-size: 1rem;
+  margin: 0;
+}
+
 /* ─── Responsive ──────────────────────────────────────────── */
 @media (max-width: 768px) {
   .live-grid,
@@ -519,6 +590,20 @@
 
   .live-temp {
     font-size: 1.6rem;
+  }
+
+  .charts-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .city-filter {
+    justify-content: space-between;
+  }
+
+  .city-selector {
+    flex: 1;
+    min-width: 120px;
   }
 }
 

@@ -72,6 +72,9 @@ function History() {
   const [liveError,   setLiveError]   = useState(null)
   const [liveUpdated, setLiveUpdated] = useState(null)
 
+  // ── Chart filter state ─────────────────────────────────────────
+  const [selectedCity, setSelectedCity] = useState('All')
+
   // ── Load CSV ───────────────────────────────────────────────────
   const loadCSVData = useCallback(async () => {
     try {
@@ -190,6 +193,17 @@ function History() {
   })()
 
   const columns = historicalData.length > 0 ? Object.keys(historicalData[0]) : []
+
+  // ── Get unique cities from historical data ─────────────────────
+  const uniqueCities = (() => {
+    const cities = new Set(historicalData.map(row => row.Location).filter(Boolean))
+    return ['All', ...Array.from(cities).sort()]
+  })()
+
+  // ── Filter data for charts ─────────────────────────────────────
+  const chartData = selectedCity === 'All'
+    ? historicalData
+    : historicalData.filter(row => row.Location === selectedCity)
 
   return (
     <div className="history-page">
@@ -467,53 +481,122 @@ function History() {
                 SECTION 4 — CHARTS
             ══════════════════════════════════════════════════════ */}
             <section className="page-section">
-              <SectionHeader
-                icon="📈"
-                title="Data Visualization"
-                subtitle="Temperature and humidity trends over time"
-              />
-
-              <div className="chart-container">
-                <h3 className="chart-title">🌡️ Temperature Over Time (°C)</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={historicalData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="Time" tick={{ fontSize: 12 }} />
-                    <YAxis unit="°C" tick={{ fontSize: 12 }} />
-                    <Tooltip formatter={v => [`${v} °C`, 'Temperature']} />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="Temperature (°C)"
-                      stroke="#e74c3c"
-                      strokeWidth={2}
-                      dot={{ r: 4 }}
-                      activeDot={{ r: 6 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+              <div className="charts-header">
+                <div>
+                  <SectionHeader
+                    icon="📈"
+                    title="Data Visualization"
+                    subtitle="Temperature and humidity trends over time"
+                  />
+                </div>
+                {uniqueCities.length > 1 && (
+                  <div className="city-filter">
+                    <label htmlFor="city-select" className="filter-label">Filter by City:</label>
+                    <select
+                      id="city-select"
+                      value={selectedCity}
+                      onChange={(e) => setSelectedCity(e.target.value)}
+                      className="city-selector"
+                    >
+                      {uniqueCities.map(city => (
+                        <option key={city} value={city}>{city}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
 
-              <div className="chart-container chart-container--spaced">
-                <h3 className="chart-title">💧 Humidity Over Time (%)</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={historicalData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="Time" tick={{ fontSize: 12 }} />
-                    <YAxis unit="%" tick={{ fontSize: 12 }} />
-                    <Tooltip formatter={v => [`${v} %`, 'Humidity']} />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="Humidity (%)"
-                      stroke="#3498db"
-                      strokeWidth={2}
-                      dot={{ r: 4 }}
-                      activeDot={{ r: 6 }}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+              {chartData && chartData.length > 0 ? (
+                <>
+                  <div className="chart-container">
+                    <h3 className="chart-title">🌡️ Temperature Over Time (°C)</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                        <XAxis
+                          dataKey="Time"
+                          tick={{ fontSize: 12 }}
+                          stroke="#999"
+                        />
+                        <YAxis
+                          unit="°C"
+                          tick={{ fontSize: 12 }}
+                          stroke="#999"
+                        />
+                        <Tooltip
+                          formatter={(v) => {
+                            const val = parseFloat(v)
+                            return isNaN(val) ? ['N/A', 'Temperature'] : [`${val.toFixed(1)} °C`, 'Temperature']
+                          }}
+                          contentStyle={{
+                            backgroundColor: '#fff',
+                            border: '1px solid #ccc',
+                            borderRadius: '8px',
+                            padding: '8px 12px',
+                          }}
+                        />
+                        <Legend />
+                        <Line
+                          type="monotone"
+                          dataKey="Temperature (°C)"
+                          stroke="#e74c3c"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: '#e74c3c' }}
+                          activeDot={{ r: 6 }}
+                          name="Temperature (°C)"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div className="chart-container chart-container--spaced">
+                    <h3 className="chart-title">💧 Humidity Over Time (%)</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                        <XAxis
+                          dataKey="Time"
+                          tick={{ fontSize: 12 }}
+                          stroke="#999"
+                        />
+                        <YAxis
+                          unit="%"
+                          tick={{ fontSize: 12 }}
+                          stroke="#999"
+                          domain={[0, 100]}
+                        />
+                        <Tooltip
+                          formatter={(v) => {
+                            const val = parseFloat(v)
+                            return isNaN(val) ? ['N/A', 'Humidity'] : [`${val.toFixed(1)} %`, 'Humidity']
+                          }}
+                          contentStyle={{
+                            backgroundColor: '#fff',
+                            border: '1px solid #ccc',
+                            borderRadius: '8px',
+                            padding: '8px 12px',
+                          }}
+                        />
+                        <Legend />
+                        <Line
+                          type="monotone"
+                          dataKey="Humidity (%)"
+                          stroke="#3498db"
+                          strokeWidth={2}
+                          dot={{ r: 4, fill: '#3498db' }}
+                          activeDot={{ r: 6 }}
+                          name="Humidity (%)"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </>
+              ) : (
+                <div className="chart-empty-state">
+                  <p className="chart-empty-icon">📊</p>
+                  <p className="chart-empty-text">No data available for {selectedCity !== 'All' ? `${selectedCity}` : 'this selection'}.</p>
+                </div>
+              )}
             </section>
           </>
         )}
