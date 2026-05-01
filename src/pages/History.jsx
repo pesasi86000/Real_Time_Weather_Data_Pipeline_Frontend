@@ -14,7 +14,9 @@ import SectionHeader from '../components/SectionHeader'
 import { checkWeatherAlerts } from '../utils/weatherAlerts'
 import './History.css'
 
-const API_URL    = 'http://127.0.0.1:5000/weather'
+const API_URL    = 'http://127.0.0.1:5000'
+const WEATHER_API = `${API_URL}/weather`
+const HISTORY_API = `${API_URL}/history`
 const LIVE_CITIES = ['London', 'New York', 'Tokyo', 'Sydney', 'Paris', 'Dubai']
 
 function getWeatherIcon(condition) {
@@ -65,6 +67,7 @@ function History() {
   const [csvLoading, setCsvLoading] = useState(true)
   const [csvError, setCsvError]     = useState(null)
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' })
+  const [dataSource, setDataSource] = useState(null) // 'api' | 'csv'
 
   // ── Live snapshot state ────────────────────────────────────────
   const [liveData,    setLiveData]    = useState({})   // { city: apiResponseObj }
@@ -75,12 +78,44 @@ function History() {
   // ── Chart filter state ─────────────────────────────────────────
   const [selectedCity, setSelectedCity] = useState('All')
 
-  // ── Load CSV ───────────────────────────────────────────────────
-  const loadCSVData = useCallback(async () => {
-    try {
-      setCsvLoading(true)
-      setCsvError(null)
+  // ── Normalize API history record to match CSV column names ────
+  function normalizeApiRow(r) {
+    return {
+      Date:                r.date        || r.Date        || '',
+      Time:                r.time        || r.Time        || '',
+      Location:            r.location    || r.Location    || r.city || '',
+      'Temperature (°C)':  r.temperature ?? r['Temperature (°C)'] ?? r.temp ?? '',
+      'Humidity (%)':      r.humidity    ?? r['Humidity (%)']    ?? r.humidity_percent ?? '',
+      'Wind Speed (km/h)': r.wind_speed  ?? r['Wind Speed (km/h)'] ?? '',
+      'Pressure (hPa)':    r.pressure    ?? r['Pressure (hPa)']  ?? '',
+      Condition:           r.condition   || r.Condition   || r.weather || '',
+    }
+  }
 
+  // ── Load historical data: API first, CSV fallback ─────────────
+  const loadCSVData = useCallback(async () => {
+    setCsvLoading(true)
+    setCsvError(null)
+
+    // ── Try the backend /history endpoint first ────────────────
+    try {
+      const res = await fetch(`${HISTORY_API}?limit=500`)
+      if (res.ok) {
+        const raw  = await res.json()
+        const rows = Array.isArray(raw) ? raw : (raw.data || raw.records || [])
+        if (rows.length > 0) {
+          setHistoricalData(rows.map(normalizeApiRow))
+          setDataSource('api')
+          setCsvLoading(false)
+          return
+        }
+      }
+    } catch {
+      // API unavailable — fall through to CSV
+    }
+
+    // ── Fallback: static CSV ───────────────────────────────────
+    try {
       const response = await fetch('/weather_history.csv')
 
       if (!response.ok) {
@@ -108,6 +143,7 @@ function History() {
         complete: ({ data }) => {
           if (data && data.length > 0) {
             setHistoricalData(data)
+            setDataSource('csv')
           } else {
             setCsvError('CSV has no data rows.')
             setHistoricalData([])
@@ -132,7 +168,7 @@ function History() {
 
     const results = await Promise.allSettled(
       LIVE_CITIES.map(city =>
-        fetch(`${API_URL}?city=${encodeURIComponent(city)}`)
+        fetch(`${WEATHER_API}?city=${encodeURIComponent(city)}`)
           .then(r => {
             if (!r.ok) throw new Error(`HTTP ${r.status}`)
             return r.json()
@@ -214,6 +250,11 @@ function History() {
         <p className="history-subtitle">
           Real-time conditions alongside every record collected by the data pipeline
         </p>
+        {dataSource && (
+          <span className={`data-source-badge badge-${dataSource}`}>
+            {dataSource === 'api' ? '🔗 Live API data' : '📄 CSV fallback data'}
+          </span>
+        )}
       </div>
 
       <div className="history-content">

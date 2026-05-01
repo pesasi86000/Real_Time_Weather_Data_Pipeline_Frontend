@@ -22,6 +22,28 @@
   margin: 0;
 }
 
+.data-source-badge {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.badge-api {
+  background: rgba(72, 187, 120, 0.18);
+  border: 1px solid rgba(72, 187, 120, 0.5);
+  color: #c6f6d5;
+}
+
+.badge-csv {
+  background: rgba(237, 137, 54, 0.18);
+  border: 1px solid rgba(237, 137, 54, 0.45);
+  color: #feebc8;
+}
+
 .history-content {
   max-width: 1200px;
   margin: 0 auto;

@@ -1,13 +1,19 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, Legend,
+} from 'recharts'
 import AlertBox from '../components/AlertBox'
 import { checkWeatherAlerts, getAlertSummary } from '../utils/weatherAlerts'
 import './Dashboard.css'
 
 const REFRESH_INTERVAL = 300 // seconds
+const API_URL = 'http://127.0.0.1:5000'
 const cities = [
   'London', 'New York', 'Tokyo', 'Sydney', 'Paris',
   'Dubai', 'Mumbai', 'Singapore', 'Toronto', 'Berlin'
 ]
+const COMPARE_CITIES = ['London', 'New York', 'Tokyo', 'Sydney', 'Dubai', 'Paris']
 
 function getWeatherIcon(condition) {
   if (!condition) return '☁️'
@@ -67,6 +73,12 @@ function Dashboard() {
   const [dismissedAlerts, setDismissedAlerts] = useState(new Set())
   const [countdown, setCountdown] = useState(REFRESH_INTERVAL)
 
+  // ── History & multi-city state ─────────────────────────────────
+  const [historyData, setHistoryData]       = useState([])
+  const [historyLoading, setHistoryLoading] = useState(false)
+  const [multiCityData, setMultiCityData]   = useState({})
+  const [multiCityLoading, setMultiCityLoading] = useState(false)
+
   const countdownRef = useRef(null)
 
   const startCountdown = useCallback(() => {
@@ -85,7 +97,7 @@ function Dashboard() {
       if (isAutoRefresh) setRefreshing(true)
       else setLoading(true)
       setError(null)
-      const response = await fetch(`http://127.0.0.1:5000/weather?city=${encodeURIComponent(city)}`)
+      const response = await fetch(`${API_URL}/weather?city=${encodeURIComponent(city)}`)
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
         throw new Error(errorData.message || `City not found or backend error (${response.status})`)
@@ -104,15 +116,52 @@ function Dashboard() {
     }
   }, [startCountdown])
 
+  // ── Fetch last 24 historical records for the selected city ─────
+  const fetchHistoryData = useCallback(async (city) => {
+    setHistoryLoading(true)
+    try {
+      const res = await fetch(`${API_URL}/history?city=${encodeURIComponent(city)}&limit=24`)
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const raw = await res.json()
+      const rows = Array.isArray(raw) ? raw : (raw.data || raw.records || [])
+      setHistoryData(rows)
+    } catch {
+      setHistoryData([])
+    } finally {
+      setHistoryLoading(false)
+    }
+  }, [])
+
+  // ── Fetch live weather for all compare cities ──────────────────
+  const fetchMultiCity = useCallback(async () => {
+    setMultiCityLoading(true)
+    const results = await Promise.allSettled(
+      COMPARE_CITIES.map(c =>
+        fetch(`${API_URL}/weather?city=${encodeURIComponent(c)}`)
+          .then(r => (r.ok ? r.json() : Promise.reject()))
+          .then(data => ({ city: c, data }))
+      )
+    )
+    const map = {}
+    for (const r of results) {
+      if (r.status === 'fulfilled') map[r.value.city] = r.value.data
+    }
+    setMultiCityData(map)
+    setMultiCityLoading(false)
+  }, [])
+
   const handleCityChange = (e) => {
     const city = e.target.value
     setSelectedCity(city)
     setWeatherData(null)
+    setHistoryData([])
     fetchWeatherData(city)
+    fetchHistoryData(city)
   }
 
   const handleManualRefresh = () => {
     fetchWeatherData(selectedCity, true)
+    fetchHistoryData(selectedCity)
   }
 
   const handleDismissAlert = (index) => {
@@ -121,7 +170,12 @@ function Dashboard() {
 
   useEffect(() => {
     fetchWeatherData(selectedCity)
-    const interval = setInterval(() => fetchWeatherData(selectedCity, true), REFRESH_INTERVAL * 1000)
+    fetchHistoryData(selectedCity)
+    fetchMultiCity()
+    const interval = setInterval(() => {
+      fetchWeatherData(selectedCity, true)
+      fetchHistoryData(selectedCity)
+    }, REFRESH_INTERVAL * 1000)
     return () => {
       clearInterval(interval)
       clearInterval(countdownRef.current)
@@ -133,6 +187,22 @@ function Dashboard() {
   const alertSummary = getAlertSummary(visibleAlerts)
   const cityName = weatherData?.title || weatherData?.location || weatherData?.city || selectedCity
   const temp = weatherData?.temperature ?? weatherData?.temp
+
+  // ── Derive chart points from history API data ──────────────────
+  const chartPoints = historyData
+    .slice()
+    .sort((a, b) => {
+      const aStr = `${a.date || a.Date || ''}T${a.time || a.Time || '00:00'}`
+      const bStr = `${b.date || b.Date || ''}T${b.time || b.Time || '00:00'}`
+      return aStr.localeCompare(bStr)
+    })
+    .slice(-24)
+    .map(r => ({
+      label: r.time || r.Time || r.date || r.Date || '',
+      temp: parseFloat(r.temperature ?? r['Temperature (°C)'] ?? r.temp) || null,
+      humidity: parseFloat(r.humidity ?? r['Humidity (%)'] ?? r.humidity_percent) || null,
+    }))
+    .filter(p => p.temp !== null)
 
   return (
     <div className="dashboard-page">
@@ -252,6 +322,13 @@ function Dashboard() {
                   <span className="detail-label">Visibility</span>
                   <span className="detail-value">{weatherData.visibility ?? '10'} km</span>
                 </div>
+                {(weatherData.pressure != null) && (
+                  <div className="detail-item">
+                    <span className="detail-icon">🔵</span>
+                    <span className="detail-label">Pressure</span>
+                    <span className="detail-value">{weatherData.pressure} hPa</span>
+                  </div>
+                )}
               </div>
             </div>
           </section>
@@ -292,6 +369,86 @@ function Dashboard() {
               </div>
             )}
           </section>
+
+          {/* ── Section 3: Recent Temperature Trend ── */}
+          {(historyLoading || chartPoints.length > 0) && (
+            <section className="card">
+              <div className="section-title-row">
+                <h2 className="section-title">📈 Recent Trend</h2>
+                <span className="location-badge">📍 {cityName} — Last 24 records</span>
+              </div>
+              {historyLoading ? (
+                <div className="sk-row sk-wide" style={{ height: 220 }} />
+              ) : (
+                <ResponsiveContainer width="100%" height={220}>
+                  <LineChart data={chartPoints} margin={{ top: 4, right: 16, left: -10, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
+                    <XAxis dataKey="label" tick={{ fontSize: 11 }} interval="preserveStartEnd" />
+                    <YAxis tick={{ fontSize: 11 }} />
+                    <Tooltip
+                      contentStyle={{ borderRadius: 10, border: '1px solid #e2e8f0', fontSize: 13 }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: 12 }} />
+                    <Line
+                      type="monotone" dataKey="temp" name="Temp (°C)"
+                      stroke="#667eea" strokeWidth={2} dot={false} activeDot={{ r: 5 }}
+                    />
+                    <Line
+                      type="monotone" dataKey="humidity" name="Humidity (%)"
+                      stroke="#48bb78" strokeWidth={2} dot={false} activeDot={{ r: 5 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
+            </section>
+          )}
+
+          {/* ── Section 4: Multi-City Quick Compare ── */}
+          {(Object.keys(multiCityData).length > 0 || multiCityLoading) && (
+            <section className="card">
+              <div className="section-title-row">
+                <h2 className="section-title">🌍 City Compare</h2>
+                <button
+                  className="btn-refresh"
+                  onClick={fetchMultiCity}
+                  disabled={multiCityLoading}
+                >
+                  {multiCityLoading ? '⟳ Loading…' : '↻ Refresh'}
+                </button>
+              </div>
+              {multiCityLoading ? (
+                <div className="city-compare-grid">
+                  {COMPARE_CITIES.map(c => <div key={c} className="compare-skeleton" />)}
+                </div>
+              ) : (
+                <div className="city-compare-grid">
+                  {COMPARE_CITIES.map(city => {
+                    const d = multiCityData[city]
+                    if (!d) return null
+                    const t    = d.temperature ?? d.temp
+                    const cond = d.condition || d.weather || 'Unknown'
+                    return (
+                      <div
+                        key={city}
+                        className={`compare-card${city === selectedCity ? ' compare-card-active' : ''}`}
+                      >
+                        <div className="compare-city">{city}</div>
+                        <div className="compare-icon">{getWeatherIcon(cond)}</div>
+                        <div className={`compare-temp${t !== undefined ? ` ${getTempClass(t)}` : ''}`}>
+                          {t ?? '—'}°C
+                        </div>
+                        <div className="compare-cond">{cond}</div>
+                        <div className="compare-meta">
+                          <span>💧 {d.humidity ?? d.humidity_percent ?? '—'}%</span>
+                          <span>🌬️ {d.wind_speed ?? 0} km/h</span>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+            </section>
+          )}
 
         </div>
       )}
