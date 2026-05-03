@@ -7,9 +7,10 @@ function Home() {
       {/* ── Hero ── */}
       <div className="hero-section">
         <div className="hero-content">
+          <div className="hero-badge">🌤️ Live Weather Intelligence Platform</div>
           <h1 className="hero-title">
-            <span className="hero-icon">🌈</span>
-            Real-Time Weather Intelligence
+            Real-Time Weather
+            <span className="hero-title-accent"> Intelligence</span>
           </h1>
           <p className="hero-subtitle">
             Monitor live conditions, explore forecasts, and analyze historical data — all in one place.
@@ -21,6 +22,22 @@ function Home() {
             <Link to="/forecast" className="btn btn-secondary">
               7-Day Forecast
             </Link>
+          </div>
+          <div className="hero-highlights">
+            <div className="highlight-item">
+              <span className="highlight-icon">⚡</span>
+              <span>Live updates</span>
+            </div>
+            <div className="highlight-sep">·</div>
+            <div className="highlight-item">
+              <span className="highlight-icon">🌍</span>
+              <span>10 major cities</span>
+            </div>
+            <div className="highlight-sep">·</div>
+            <div className="highlight-item">
+              <span className="highlight-icon">📊</span>
+              <span>Historical analytics</span>
+            </div>
           </div>
         </div>
 

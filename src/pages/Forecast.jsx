@@ -3,15 +3,25 @@ import AlertBox from '../components/AlertBox'
 import { checkWeatherAlerts } from '../utils/weatherAlerts'
 import './Forecast.css'
 
+// Build dates starting from today (May 3, 2026)
+const today = new Date(2026, 4, 3) // May 3 2026
 const forecastData = [
-  { day: 'Monday',    icon: '☀️',  temp: 24, condition: 'Sunny',           humidity: 45, wind_speed: 12 },
-  { day: 'Tuesday',   icon: '⛅',  temp: 22, condition: 'Partly Cloudy',   humidity: 50, wind_speed: 18 },
-  { day: 'Wednesday', icon: '🌧️', temp: 19, condition: 'Rainy',            humidity: 75, wind_speed: 25 },
-  { day: 'Thursday',  icon: '⛈️', temp: 18, condition: 'Thunderstorm',     humidity: 80, wind_speed: 55 },
-  { day: 'Friday',    icon: '☁️',  temp: 20, condition: 'Cloudy',           humidity: 60, wind_speed: 15 },
-  { day: 'Saturday',  icon: '🌤️', temp: 23, condition: 'Partly Sunny',     humidity: 55, wind_speed: 10 },
-  { day: 'Sunday',    icon: '☀️',  temp: 34, condition: 'Clear',            humidity: 38, wind_speed: 8  },
-]
+  { day: 'Monday',    icon: '☀️',  high: 24, low: 18, condition: 'Sunny',           humidity: 45, wind_speed: 12, uv: 7  },
+  { day: 'Tuesday',   icon: '⛅',  high: 22, low: 16, condition: 'Partly Cloudy',   humidity: 50, wind_speed: 18, uv: 5  },
+  { day: 'Wednesday', icon: '🌧️', high: 19, low: 14, condition: 'Rainy',            humidity: 75, wind_speed: 25, uv: 2  },
+  { day: 'Thursday',  icon: '⛈️', high: 18, low: 13, condition: 'Thunderstorm',     humidity: 80, wind_speed: 55, uv: 1  },
+  { day: 'Friday',    icon: '☁️',  high: 20, low: 15, condition: 'Cloudy',           humidity: 60, wind_speed: 15, uv: 3  },
+  { day: 'Saturday',  icon: '🌤️', high: 23, low: 17, condition: 'Partly Sunny',     humidity: 55, wind_speed: 10, uv: 6  },
+  { day: 'Sunday',    icon: '☀️',  high: 34, low: 22, condition: 'Clear',            humidity: 38, wind_speed: 8,  uv: 10 },
+].map((d, i) => {
+  const date = new Date(today)
+  date.setDate(today.getDate() + i)
+  return {
+    ...d,
+    temp: d.high,
+    dateLabel: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+  }
+})
 
 function getSeverityDot(alerts) {
   if (!alerts.length) return null
@@ -72,18 +82,29 @@ function Forecast() {
                   className={`forecast-card${isActive ? ' forecast-card-active' : ''}`}
                   onClick={() => handleCardClick(index)}
                   aria-expanded={isActive}
-                  aria-label={`${day.day}: ${day.condition}, ${day.temp}°C${alerts.length ? `, ${alerts.length} alert${alerts.length > 1 ? 's' : ''}` : ''}`}
+                  aria-label={`${day.day}: ${day.condition}, High ${day.high}°C Low ${day.low}°C${alerts.length ? `, ${alerts.length} alert${alerts.length > 1 ? 's' : ''}` : ''}`}
                 >
                   {dotClass && (
                     <span className={`severity-dot ${dotClass}`} aria-hidden="true" />
                   )}
+                  <div className="forecast-date-label">{day.dateLabel}</div>
                   <div className="forecast-day">{day.day}</div>
                   <div className="forecast-icon">{day.icon}</div>
-                  <div className="forecast-temp">{day.temp}°C</div>
                   <div className="forecast-condition">{day.condition}</div>
-                  <div className="forecast-humidity">
-                    <span className="humidity-icon">💧</span>
-                    {day.humidity}%
+                  <div className="forecast-temp-range">
+                    <span className="forecast-temp-high">{day.high}°</span>
+                    <span className="forecast-temp-sep">/</span>
+                    <span className="forecast-temp-low">{day.low}°</span>
+                  </div>
+                  <div className="forecast-stats-row">
+                    <span className="forecast-stat">
+                      <span className="forecast-stat-icon">💧</span>
+                      {day.humidity}%
+                    </span>
+                    <span className="forecast-stat">
+                      <span className="forecast-stat-icon">🌬️</span>
+                      {day.wind_speed} km/h
+                    </span>
                   </div>
                   {alerts.length > 0 && (
                     <div className="forecast-alert-hint">
@@ -114,7 +135,7 @@ function Forecast() {
         <div className="forecast-info">
           <div className="info-card">
             <h3>📅 Weekly Overview</h3>
-            <p>Expect varied conditions this week with temperatures ranging from 18°C to 34°C. Midweek rain and a Thursday thunderstorm warning.</p>
+            <p>Temperatures range <strong>18°C–34°C</strong> this week. Expect rain on Wednesday, a thunderstorm Thursday, and clear skies through the weekend.</p>
           </div>
           <div className="info-card">
             <h3>⚠️ Key Alerts</h3>

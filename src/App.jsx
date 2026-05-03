@@ -31,7 +31,13 @@ function App() {
         </main>
 
         <footer className="footer">
-          <p>© 2026 WeatherPro | Powered by Real-Time Data Pipeline</p>
+          <p>© 2026 WeatherPro · Powered by Real-Time Data Pipeline</p>
+          <div className="footer-links">
+            <a href="/#/dashboard">Dashboard</a>
+            <a href="/#/forecast">Forecast</a>
+            <a href="/#/history">History</a>
+            <a href="/#/about">About</a>
+          </div>
         </footer>
       </div>
     </Router>

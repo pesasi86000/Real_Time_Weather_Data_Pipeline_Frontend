@@ -75,11 +75,12 @@
 
 /* ─── Card ────────────────────────────────────────────────── */
 .card {
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(255, 255, 255, 0.98);
   border-radius: 20px;
   padding: 28px 32px;
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0,0,0,0.04);
   animation: fadeInUp 0.5s ease-out;
+  border: 1px solid rgba(255,255,255,0.8);
 }
 
 /* ─── Section Header Row ─────────────────────────────────── */
@@ -91,14 +92,21 @@
   gap: 12px;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+  border-bottom: 2px solid rgba(102, 126, 234, 0.08);
 }
 
 .section-title {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 800;
   color: #2d3748;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::after {
+  display: none;
 }
 
 .section-meta {
@@ -173,17 +181,20 @@
 /* ─── Current Weather ─────────────────────────────────────── */
 .weather-main-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(160px, 240px) 1fr;
   gap: 32px;
-  align-items: center;
+  align-items: start;
 }
 
 .weather-hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 16px 0;
+  gap: 6px;
+  padding: 20px 8px;
+  background: linear-gradient(135deg, rgba(102,126,234,0.06) 0%, rgba(118,75,162,0.04) 100%);
+  border-radius: 16px;
+  border: 1.5px solid rgba(102,126,234,0.1);
 }
 
 .weather-icon {
@@ -217,54 +228,73 @@
 }
 
 .condition-label {
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
   color: #4a5568;
   text-align: center;
+  background: rgba(102,126,234,0.08);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-top: 2px;
 }
 
 /* ─── Detail Stats ────────────────────────────────────────── */
 .weather-details {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
 .detail-item {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 18px;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-  border-radius: 12px;
-  border: 1.5px solid transparent;
-  transition: border-color 0.2s, transform 0.2s;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.06) 0%, rgba(118, 75, 162, 0.04) 100%);
+  border-radius: 14px;
+  border: 1.5px solid rgba(102, 126, 234, 0.1);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(180deg, #667eea, #764ba2);
+  border-radius: 3px 0 0 3px;
 }
 
 .detail-item:hover {
-  border-color: rgba(102, 126, 234, 0.35);
-  transform: translateX(4px);
+  border-color: rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 14px rgba(102, 126, 234, 0.12);
+  transform: translateY(-2px);
 }
 
 .detail-icon {
-  font-size: 1.6rem;
-  width: 32px;
-  text-align: center;
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
 .detail-label {
-  font-size: 0.85rem;
-  color: #718096;
-  font-weight: 600;
-  flex: 1;
+  font-size: 0.75rem;
+  color: #a0aec0;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  margin: 0;
 }
 
 .detail-value {
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 800;
   color: #2d3748;
+  line-height: 1;
 }
 
 /* ─── Alerts Section ──────────────────────────────────────── */
@@ -601,37 +631,61 @@
 /* ─── City Compare Grid ───────────────────────────────────── */
 .city-compare-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 14px;
 }
 
 .compare-card {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.04) 0%, rgba(118, 75, 162, 0.04) 100%);
+  background: white;
   border: 1.5px solid rgba(102, 126, 234, 0.15);
-  border-radius: 14px;
-  padding: 16px 14px;
+  border-radius: 16px;
+  padding: 18px 14px 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   cursor: default;
   transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.compare-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
 .compare-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.18);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.compare-card:hover::after {
+  opacity: 1;
 }
 
 .compare-card-active {
   border-color: #667eea;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+  background: linear-gradient(160deg, rgba(102, 126, 234, 0.06) 0%, rgba(118, 75, 162, 0.06) 100%);
+  box-shadow: 0 4px 18px rgba(102, 126, 234, 0.2);
+}
+
+.compare-card-active::after {
+  opacity: 1;
 }
 
 .compare-skeleton {
   height: 148px;
-  border-radius: 14px;
+  border-radius: 16px;
   background: linear-gradient(90deg, #e8eaf0 25%, #f5f6f8 50%, #e8eaf0 75%);
   background-size: 600px 100%;
   animation: shimmer 1.4s infinite linear;
@@ -639,22 +693,24 @@
 
 .compare-city {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #667eea;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-align: center;
 }
 
 .compare-icon {
-  font-size: 2rem;
+  font-size: 2.2rem;
   line-height: 1.2;
+  margin: 4px 0;
 }
 
 .compare-temp {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 800;
   color: #2d3748;
+  line-height: 1;
 }
 
 /* re-use getTempClass on compare-temp */
@@ -664,9 +720,10 @@
 .compare-temp.temp-freezing    { color: #2b6cb0; }
 
 .compare-cond {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: #718096;
   text-align: center;
+  font-weight: 500;
 }
 
 .compare-meta {
@@ -674,7 +731,11 @@
   gap: 8px;
   font-size: 0.75rem;
   color: #4a5568;
-  margin-top: 4px;
-  flex-wrap: wrap;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(102,126,234,0.1);
+  width: 100%;
   justify-content: center;
+  flex-wrap: wrap;
+  font-weight: 500;
 }
